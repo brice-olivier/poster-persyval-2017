@@ -20,8 +20,8 @@
 \setbeamercolor{title in head/foot}{fg=ta2skyblue, bg=black}
 
 \setbeamercolor*{normal text}{fg=tachameleon, bg=ta3gray}
-\setbeamercolor*{block body}{bg=ta3aluminium,fg=black}
-\setbeamercolor*{block title}{fg=taskyblue,bg=ta2gray}
+\setbeamercolor*{block body}{bg=white,fg=black}
+\setbeamercolor*{block title}{fg=white,bg=bluepersyval}
 \setbeamerfont{block title}{size=\large,series=\bf}
 \setbeamercolor{upper separation line head}{fg=ta2skyblue}
 
@@ -71,21 +71,21 @@
       \end{column}
       \begin{column}{.27\paperwidth}\end{column}
     \end{columns}
-    \vskip0.5cm
+    \vskip0.8cm
     \begin{columns}[T]
         \begin{column}{.02\paperwidth}\end{column}
-        \begin{column}{.62\paperwidth}
+        \begin{column}{.70\paperwidth}
             \flushleft
             \usebeamercolor{author in headline}{\color{fg}\Large{\insertauthor}}
-            \newline
+            \vskip0.3cm
             \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}
         \end{column}
-        \begin{column}{.36\paperwidth}\end{column}
-    \end{columns}[T]
+        \begin{column}{.28\paperwidth}\end{column}
+    \end{columns}
   \end{beamercolorbox}
-
+  \vskip0.5cm
   \begin{beamercolorbox}[wd=\paperwidth]{lower separation line head}
-    \rule{0pt}{2pt}
+    \rule{0pt}{3pt}
   \end{beamercolorbox}
 }
 
@@ -105,23 +105,23 @@
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{footline}{
-  \begin{beamercolorbox}[wd=\paperwidth]{upper separation line foot}
-    \rule{0pt}{2pt}
-  \end{beamercolorbox}
+%\setbeamertemplate{footline}{
+%  \begin{beamercolorbox}[wd=\paperwidth]{upper separation line foot}
+%    \rule{0pt}{2pt}
+%  \end{beamercolorbox}
 
-  \leavevmode%
-  \begin{beamercolorbox}[ht=4ex,leftskip=1cm,rightskip=1cm]{author in head/foot}%
-    \texttt{http://www-i6.informatik.rwth-aachen.de}
-    \hfill
-    \texttt{<surname>@cs.rwth-aachen.de}
-    \vskip1ex
-  \end{beamercolorbox}
-  \vskip0pt%
-  \begin{beamercolorbox}[wd=\paperwidth]{lower separation line foot}
-    \rule{0pt}{2pt}
-  \end{beamercolorbox}
-}
+%  \leavevmode%
+%  \begin{beamercolorbox}[ht=4ex,leftskip=1cm,rightskip=1cm]{author in head/foot}%
+%    \texttt{http://www-i6.informatik.rwth-aachen.de}
+%    \hfill
+%    \texttt{<surname>@cs.rwth-aachen.de}
+%    \vskip1ex
+%  \end{beamercolorbox}
+%  \vskip0pt%
+%  \begin{beamercolorbox}[wd=\paperwidth]{lower separation line foot}
+%    \rule{0pt}{2pt}
+%  \end{beamercolorbox}
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Display a grid to help align images ... and it looks nice with this color scheme
