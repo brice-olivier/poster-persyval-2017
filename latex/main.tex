@@ -32,7 +32,6 @@
 \newlength{\columnheight}
 \setlength{\columnheight}{100cm}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{frame}
@@ -66,17 +65,20 @@
                     \item[\hookrightarrow] Have the reading strategies contrasted characteristics in terms of EEGs?
                 \end{itemize}
             \end{block}
+
             \vfill
             \begin{block}{Data pre-processing}
 
                 \begin{minipage}{0.45\textwidth}
                     \begin{figure}[H]
                         \includegraphics[width=1\linewidth]{s4t9bl.png}
+                        \caption{Scanpath : alternance of fixations and saccades.
+                        Each circle correspond to a fixation, the larger it is, the longer the fixation is.
+                        Each line corresponds to a saccade.}
                     \end{figure}
                 \end{minipage} \hfill
                 \begin{minipage}{0.45\textwidth}
                     \begin{itemize}
-                        \item[\bullet] Scanpath : set of fixations and saccades.
                         \item[\bullet] Data augmentation :
                         \begin{itemize}
                             \item[\bullet] Participant, subject
@@ -97,6 +99,7 @@
                     \item[\hookrightarrow] Change point detection model to catch changes of phase
                 \end{itemize}
             \end{block}
+
             \vfill
             \begin{block}{Hidden semi-Markov models (Yu 2010)}
                 \textbf{Assume :}
@@ -148,7 +151,7 @@
             \begin{block}{Inference \& Learning in HSMM}
                 \textbf{Inference :}
                 \vskip0.5cm
-                As in HMM (Cf. Rabiner), we use a \textbf{Forward-Backward} algorithm to maintain tractability in inference problems.
+                As in HMM, we use a \textbf{Forward-Backward} algorithm to maintain tractability in inference problems.
                 One can then compute various expectations such as $P(o_1, ..., o_T | \lambda)$.\\
                 Interestingly, the joint MAP estimate of the state that ends at time $t$ and the duration of this state,
                 observing a specific sequence $o_1, ..., o_T$ i.e.
@@ -158,20 +161,54 @@
                 \vskip1cm
                 \textbf{Learning :}
                 \vskip0.5cm
-
+                MLE of $\lambda$ via the iterative \textbf{Expectation-Maximization} algorithm :\\
+                E-step : find the posterior distribution {\small $P(S_1, ..., S_T | O_1, ..., O_T, \lambda^{old})$}\\
+                M-step : maximize le log-likelihood with respect to $\lambda$
             \end{block}
+
             \vfill
             \begin{block}{Application to eye-movement data}
+                \begin{itemize}
+                    \item[\bullet] The time index $t$ corresponds to a fixation.
+                    \item[\bullet] $\mathcal{V} = \{\text{Forward+, Forward, Refixation, Backward, Backward+}\}$
+                    \item[\bullet] $M = 5$ reading strategies estimated by maximizing BIC criterion
+                \end{itemize}
+                \begin{figure}[h]
+                    \centering
+                    \includegraphics[width=35cm]{hsmm.jpg}
+                    \caption{HSMM. The upper bar charts represent the sojourn time in the states.
+                    The automaton modelize the transition probabilites between states.
+                    The lower bar charts represent the emission distributions for each state.}
+                \end{figure}
+                5 strategies are uncovered by interpreting the states according to reading theory and by
+                analyzing covariates such as fixation duration, saccade amplitude, proximity of the word fixated to the goal :
+                \textit{Normal reading} : merge of states 0/1, \textit{Speed reading} : state 2,
+                \textit{Careful reading} : state 3, \textit{Confirmation} : state 4.
+                \vskip0.5cm
+                \textbf{Issues adressed :}
+                \begin{itemize}
+                    \item[\bullet] Text variability : evolution of text relativeness to the topic
+                    \item[\bullet] Individual variability : fast vs. careful readers.
+                \end{itemize}
             \end{block}
-            \vfill
-            \begin{block}{EEG data}
-            \end{block}
+
+            %\vfill
+            %\begin{block}{EEG data}
+            %\end{block}
+
             \vfill
             \begin{block}{Perspectives}
+                \begin{itemize}
+                    \item[\bullet] Since there is a lot of variability in the text and individuals,
+                    propose a clustering approach to reduce variability of the model (mixtures of HSMM)
+                    \item[\bullet] Couple eye-movement and EEG data into a single HSMM framework handling signals overlap
+                \end{itemize}
             \end{block}
+
             \vfill
             \begin{block}{References}
                 \begin{enumerate}
+                    {\footnotesize
                     \item Frey, Aline; Ionescu, Gelu; Lemaire, Benoit; López-Orozco, Francisco; Baccino, Thierry; Guérin-Dugué, Anne.
                     Decision-making in information seeking on texts: an eye-fixation-related potentials investigation.
                     \textit{Frontiers in systems neuroscience} 7 (8): 1-22 (2013)
@@ -183,6 +220,7 @@
                     \item Yu, Shun-zheng.
                     Hidden semi-Markov models.
                     \textit{Artificial Intelligence} 174 (2): 215-143 (2010)
+                    }
                 \end{enumerate}
             \end{block}
           }
