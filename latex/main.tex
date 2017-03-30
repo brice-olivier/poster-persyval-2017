@@ -108,7 +108,7 @@
                     \item[\bullet] Semantic proximity of the words in each text to the target topic (Latent Semantic Analysis + Cosine distance)
                 \end{itemize}
                 \vskip0.5cm
-                \textbf{Observed process :} Readmode :  number of words between two fixations constrained by a "more than +1" and "less than -1"
+                \textbf{Observed process :} Readmode :  number of words between two fixations \{ $>$ 1, 1, 0, -1 , $<$ -1\}
                 \vskip0.5cm
                 \textbf{Model covariates :} Fixation duration, saccade amplitude, proximity of the fixated word to the topic
 
@@ -124,11 +124,12 @@
             \vfill
             \begin{block}{Hidden semi-Markov models (Yu 2010)}
                 \begin{figure}[H]
-                    \includegraphics[width=.48\linewidth]{hsmm_representation.png}
-                    %\caption{Scanpath : alternance of fixations (circle, ratio proportional to duration) and saccades (lines).}
+                    \includegraphics[width=.60\linewidth]{hsmm_representation.png}
+                    \caption{Yu, 2010}
                 \end{figure}
+                \vskip-2cm
                 \textbf{Assume :}
-                \vskip0.3cm
+                %\vskip0.1cm
                 \begin{itemize}
                     \item[\bullet] the set of observable values $\mathcal{V} = \{ v_1,..., v_K\}$
                     where $O_t \in \mathcal{V}$ is the state at time $t$. $O_{1:T}$ is the observed state sequence,
@@ -141,13 +142,14 @@
 
                 \vskip0.5cm
                 \textbf{Model :} Explicit-duration HMM, assuming process starts at $t=1$ and ends at $T$
+                \vskip0cm
                 \begin{itemize}
                     \item[\bullet] the initial distribution :
-                    $$\pi_{j,d} \equiv P(S_{1:t} = j, S_{t+1} \neq j)$$
+                    $$\pi_{j,d} \equiv P(S_{1:d} = j, S_{d+1} \neq j)$$
                     \item[\bullet] the state transition probability from $(i,d')$ to $(j,d)$, $i \neq j$ :
                     $$a_{(i,d')(j,d)}=a_{ij}p_j(d)$$
                     $$a_{ij} \equiv P(S_{t+1} = j | S_t = i)$$
-                    $$p_j(d) \equiv P(S_{t+2:t+d} = j, S_{t+d+1} \neq j | S_t \neq j, S_{t+1} = j)$$
+                    $$p_j(d) \equiv P(S_{t+1:t+d} = j, S_{t+d+1} \neq j | S_t \neq j)$$
                     \item[\bullet] the emission probability :
                     $$b_{j,d}(o_{t+1}) \equiv P(o_{t+1:t+d} | S_{t+1:t+d} = j)$$
                     \item[\bullet] the parameters of the model : $\lambda \equiv \{a_{(i,d')(j,d)},b_{j,d}(v_{k_1:k_d}), \pi_{i,d}\}$
@@ -172,17 +174,17 @@
             % fill each column with content
             \begin{block}{Inference \& Learning in HSMM}
                 \textbf{Inference :}
-                \vskip0.5cm
-                We use a \textbf{Forward-Backward} algorithm to maintain tractability in inference problems.
-                One can then compute various expectations such as $P(o_1, ..., o_T | \lambda)$.\\
+                %\vskip0.5cm
+                \textbf{Forward-Backward} algorithm to maintain tractability in inference problems.
+                (e.g. expectations such as $P(o_1, ..., o_T | \lambda)$.)\\
                 Interestingly, the joint MAP estimate of the state that ends at time $t$ and the duration of this state,
                 observing a specific sequence $o_1, ..., o_T$ i.e.
-                {\small $$(\hat s_t, \hat d_t) = \underset{(j,d)}{\mathrm{arg max}} P(S_{t+1} \neq j, S_t = j, ..., S_{t-d+1} = j, S_{t-d} \neq j, o_1, ..., o_t | \lambda)$$}
+                { $$(\hat s_t, \hat d_t) = \underset{(j,d)}{\mathrm{arg~max}} P(S_{t-d} \neq j, S_{t-d+1:t} = j, S_{t+1} \neq j, o_{1:t} | \lambda)$$}
                 can be estimated via MLE using \textbf{Viterbi} algorithms.
 
                 \vskip1cm
                 \textbf{Learning :}
-                \vskip0.5cm
+                %\vskip0.5cm
                 MLE of $\lambda$ via the iterative \textbf{Expectation-Maximization} algorithm :\\
                 E-step : find the posterior distribution {\small $P(S_1, ..., S_T | O_1, ..., O_T, \lambda^{old})$}\\
                 M-step : maximize le log-likelihood with respect to $\lambda$
@@ -197,16 +199,14 @@
                 \end{itemize}
                 \begin{figure}[h]
                     \centering
-                    \includegraphics[width=35cm]{hsmm.jpg}
+                    \includegraphics[width=29.75cm]{hsmm.jpg}
                     \caption{HSMM. top bar charts : sojourn time distributions.
                     automaton : transition probabilities.
                     bottom bar charts : emission probabilities.}
                 \end{figure}
-                5 strategies are uncovered by interpreting the states according to reading theory and by
-                analyzing covariates such as fixation duration, saccade amplitude, proximity of the word fixated to the goal :
-                \textit{Normal reading} : merge of states 0/1, \textit{Speed reading} : state 2,
-                \textit{Careful reading} : state 3, \textit{Confirmation} : state 4.
-                \vskip0.5cm
+                4 interpretable strategies uncovered and validated according to reading theory and by analyzing coviariates
+                (fixation duration, saccade amplitude, proximity of the word fixated to the goal) :
+                {\small$$\mathcal{S}=\{\text{0-1 : Normal reading, 2 : Speed reading, 3 : Careful reading, 4 : Confirmation}\}$$}
                 \begin{minipage}{0.47\textwidth}
                     \begin{figure}[h]
                         \centering
@@ -219,6 +219,7 @@
                         \includegraphics[width=18cm]{scanpath-trained-reader-subj-13-text-5.png}
                     \end{figure}
                 \end{minipage}
+                \vskip 0.5cm
                 \textbf{Issues adressed :}
                 \begin{itemize}
                     \item[\bullet] Text variability : evolution of text relativeness to the topic
@@ -232,26 +233,42 @@
 
             \vfill
             \begin{block}{Perspectives}
-                \begin{itemize}
-                    \item[\bullet] Since there is a lot of variability in the text and individuals,
-                    propose a clustering approach to reduce variability of the model (mixtures of HSMM)
-                    \item[\bullet] Couple eye-movement and EEG data into a single HSMM framework handling signals overlap
-                \end{itemize}
+                \vskip0.2cm
+                \begin{minipage}{0.67\textwidth}
+                    \begin{itemize}
+                        \item[\bullet] Since there is a lot of variability in the text and individuals,
+                        propose a clustering approach to reduce variability of the model (mixtures of HSMM)
+                        \item[\bullet] Couple eye-movement and EEG data into a single HSMM framework handling signals overlap
+                    \end{itemize}
+                \end{minipage}
+                \begin{minipage}{0.30\textwidth}
+                    \begin{figure}[h]
+                        \centering
+                        \includegraphics[heigth=10cm]{chsmm_representation.png}
+                        \caption{Natarajan, 2007}
+                    \end{figure}
+                \end{minipage}
+
+
             \end{block}
 
             \vfill
             \begin{block}{References}
                 \begin{enumerate}
                     {\footnotesize
-                    \item Frey, Aline; Ionescu, Gelu; Lemaire, Benoit; López-Orozco, Francisco; Baccino, Thierry; Guérin-Dugué, Anne.
+                    \item Frey, A. et al.
                     Decision-making in information seeking on texts: an eye-fixation-related potentials investigation.
                     \textit{Frontiers in systems neuroscience} 7 (8): 1-22 (2013)
 
-                    \item Simola, Jaana; Salojärvi, Jarkko; Kojo, Ilpo.
+                    \item Natarajan P. et al.
+                    Coupled Hidden Semi Markov Models for Activity Recognition.
+                    \textit{Motion and video computing} (2007)
+
+                    \item Simola, J. et al.
                     Using hidden Markov model to uncover processing states from eye movements in information search tasks
                     \textit{Cognitive Systems Research} 9 (4): 237-251 (2008)
 
-                    \item Yu, Shun-zheng.
+                    \item Yu, S-Z.
                     Hidden semi-Markov models.
                     \textit{Artificial Intelligence} 174 (2): 215-143 (2010)
                     }
