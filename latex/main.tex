@@ -3,7 +3,7 @@
 \mode<presentation>{\usepackage{../themes/beamerthemePersyval}}
 \usepackage[english]{babel}
 \usepackage[latin1, utf8]{inputenc}
-\usepackage{amsmath,amsthm, amssymb, latexsym}
+\usepackage{amsmath,amsthm, amssymb, latexsym, mathabx}
 %\usepackage{times}\usefonttheme{professionalfonts}  % obsolete
 %\usefonttheme[onlymath]{serif}
 \boldmath
@@ -14,6 +14,7 @@
 %\usepackage{snapshot} % will write a .dep file with all dependencies, allows for easy bundling
 
 \usepackage{array,booktabs,tabularx}
+\usepackage{wrapfig}
 \newcolumntype{Z}{>{\centering\arraybackslash}X} % centered tabularx columns
 %\newcommand{\pphantom}{\textcolor{ta3aluminium}} % phantom introduces a vertical space in p formatted table columns??!!
 
@@ -30,17 +31,34 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newlength{\columnheight}
-\setlength{\columnheight}{100cm}
+\setlength{\columnheight}{93cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{frame}
+    \begin{block}{Study purpose}
+        \begin{columns}[T]
+          \begin{column}{.50\paperwidth}
+              \begin{itemize}
+                  \item[\bullet] Textual information search is an unhomogeneous process in time (Simola, 2008)
+                  \item[\drsh] Reading and decision processes are intertwined
+              \end{itemize}
+          \end{column}
+          \begin{column}{.50\paperwidth}
+              \begin{itemize}
+                  \item[\bullet] Proposal : use a data-driven approach in order to separate these processes
+                  \item[\bullet] Have the reading strategies contrasted characteristics in terms of EEGs?
+              \end{itemize}
+          \end{column}
+        \end{columns}
+    \end{block}
+
   \begin{columns}
     % ---------------------------------------------------------%
     % Set up a column
-    \begin{column}{.49\textwidth}
+    \begin{column}{.50\textwidth}
       \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth}  % tweaks the width, makes a new \textwidth
+        \begin{minipage}[T]{.98\textwidth}  % tweaks the width, makes a new \textwidth
           \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
             % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
             % ---------------------------------------------------------%
@@ -48,62 +66,69 @@
             \begin{block}{Experiment description}
                 \begin{itemize}
                     \item[\bullet] 15 participants, 60 texts per participant
-                    \item[\bullet] Presentation of a goal topic (e.g. bird hunting) and a text
+                    \item[\bullet] Presentation of a goal topic, e.g. in french "chasse aux oiseaux" (birds hunting), and a text, extracted from LeMonde, 1999
                     \item[\bullet] Question : is the text related to the topic ?
                 \end{itemize}
-
-                \begin{figure}[h]
-                    \centering
-                    \includegraphics[height=15cm]{experiment_description.jpg}
-                    \caption{Frey et al. 2013}
-                \end{figure}
-
+                \begin{minipage}{0.47\textwidth}
+                    \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=18cm]{efrp.jpg}
+                    \end{figure}
+                \end{minipage} \hfill
+                \begin{minipage}{0.47\textwidth}
+                    \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=18cm]{experiment_description.jpg}
+                        \caption{Frey, 2013}
+                    \end{figure}
+                \end{minipage}
                 \begin{itemize}
                     \item[\bullet] Measurements of eye positions over time and 30-channel EEG
-                    \vskip1cm
-                    \item[\hookrightarrow] How to segment scanpaths into interpretable zones, in terms of cognitive phases in information acquisition and processing?
-                    \item[\hookrightarrow] Have the reading strategies contrasted characteristics in terms of EEGs?
                 \end{itemize}
             \end{block}
 
             \vfill
             \begin{block}{Data pre-processing}
-
-                \begin{minipage}{0.45\textwidth}
-                    \begin{figure}[H]
-                        \includegraphics[width=1\linewidth]{s4t9bl.png}
-                        \caption{Scanpath : alternance of fixations and saccades.
-                        Each circle correspond to a fixation, the larger it is, the longer the fixation is.
-                        Each line corresponds to a saccade.}
-                    \end{figure}
-                \end{minipage} \hfill
-                \begin{minipage}{0.45\textwidth}
-                    \begin{itemize}
-                        \item[\bullet] Data augmentation :
-                        \begin{itemize}
-                            \item[\bullet] Participant, subject
-                            \item[\bullet] Coordinates X,Y of fixations
-                            \item[\bullet] Fixation durations, number of words between fixations
-                        \end{itemize}
-                        \item[\bullet] Text processing :
-                        \begin{itemize}
-                            \item[\bullet] Word frequencies
-                            \item[\bullet] Stop words removal, stemming
-                            \item[\bullet] Latent Semantic Analysis on text corpus
-                            \item[\hookrightarrow] Semantic proximity of the text to the target topic
-                        \end{itemize}
-                    \end{itemize}
-                \end{minipage}
+                \textbf{Raw data :} Participants, texts, coordinates X,Y of fixations at each time $t$.
+                \vskip0.5cm
+                \textbf{Data augmentation :}
                 \begin{itemize}
-                    \item[\bullet] Purpose: identify reading strategies, obtain a segmentation of scanpaths with meaningful EEG interpretation
-                    \item[\hookrightarrow] Change point detection model to catch changes of phase
+                    \item[\bullet] Fixation duration, saccade amplitude
+                    \item[\bullet]
+                    \begin{minipage}{0.45\textwidth}
+                        Word fixated
+                    \end{minipage}
+                    \begin{minipage}{0.35\textwidth}
+                        \begin{figure}[H]
+                            \includegraphics[width=1\linewidth]{fixation_window.jpg}
+                            %\caption{Scanpath : alternance of fixations (circle, ratio proportional to duration) and saccades (lines).}
+                        \end{figure}
+                    \end{minipage}
+                    \item[\bullet] Number of words between two fixations
+                    \item[\bullet] Semantic proximity of the words in each text to the target topic (Latent Semantic Analysis + Cosine distance)
+                \end{itemize}
+                \vskip0.5cm
+                \textbf{Observed process :} Readmode :  number of words between two fixations constrained by a "more than +1" and "less than -1"
+                \vskip0.5cm
+                \textbf{Model covariates :} Fixation duration, saccade amplitude, proximity of the fixated word to the topic
+
+            \end{block}
+            \vfill
+            \begin{block}{Problematic}
+                \begin{itemize}
+                    \item[\bullet] Identify reading strategies, obtain a segmentation of scanpaths with meaningful EEG interpretation
+                    \item[\bullet] Change point detection model to catch changes of phase
+                    \item[\bullet] The sojourn time using reading strategies should have relaxed hypothesis
                 \end{itemize}
             \end{block}
-
             \vfill
             \begin{block}{Hidden semi-Markov models (Yu 2010)}
+                \begin{figure}[H]
+                    \includegraphics[width=.48\linewidth]{hsmm_representation.png}
+                    %\caption{Scanpath : alternance of fixations (circle, ratio proportional to duration) and saccades (lines).}
+                \end{figure}
                 \textbf{Assume :}
-                \vskip0.5cm
+                \vskip0.3cm
                 \begin{itemize}
                     \item[\bullet] the set of observable values $\mathcal{V} = \{ v_1,..., v_K\}$
                     where $O_t \in \mathcal{V}$ is the state at time $t$. $O_{1:T}$ is the observed state sequence,
@@ -114,21 +139,18 @@
                     \item[\bullet] the state duration $d \in \mathcal{D}=\{1,...,D\}$
                 \end{itemize}
 
-                \vskip1cm
-                \textbf{Model :}
                 \vskip0.5cm
+                \textbf{Model :} Explicit-duration HMM, assuming process starts at $t=1$ and ends at $T$
                 \begin{itemize}
                     \item[\bullet] the initial distribution :
-                    $$\pi_{j,d} \equiv P[S_{t+1} \neq j, S_t = j, ..., S_1 = j]$$
+                    $$\pi_{j,d} \equiv P(S_{1:t} = j, S_{t+1} \neq j)$$
                     \item[\bullet] the state transition probability from $(i,d')$ to $(j,d)$, $i \neq j$ :
                     $$a_{(i,d')(j,d)}=a_{ij}p_j(d)$$
                     $$a_{ij} \equiv P(S_{t+1} = j | S_t = i)$$
-                    $$p_j(d) \equiv P(S_{t+d+1} \neq j, S_{t+d} = j, ..., S_{t+2}=j | S_{t+1} = j, S_t \neq j)$$
+                    $$p_j(d) \equiv P(S_{t+2:t+d} = j, S_{t+d+1} \neq j | S_t \neq j, S_{t+1} = j)$$
                     \item[\bullet] the emission probability :
-                    $$b_{j,d}(o_{t+1}) \equiv P[o_{t+d}, ..., o_{t+1} | S_{t+d} = j, ..., S_{t+1} = j]$$
+                    $$b_{j,d}(o_{t+1}) \equiv P(o_{t+1:t+d} | S_{t+1:t+d} = j)$$
                     \item[\bullet] the parameters of the model : $\lambda \equiv \{a_{(i,d')(j,d)},b_{j,d}(v_{k_1:k_d}), \pi_{i,d}\}$
-                    \item[\hookrightarrow] Explicit-duration HMM
-                    \item[\hookrightarrow] Assuming the process start at $t=1$ and ends at $T$
                 \end{itemize}
 
             \end{block}
@@ -141,9 +163,9 @@
 
     % ---------------------------------------------------------%
     % Set up a column
-    \begin{column}{.49\textwidth}
+    \begin{column}{.50\textwidth}
       \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+        \begin{minipage}[T]{.98\textwidth} % tweaks the width, makes a new \textwidth
           \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
             % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
             % ---------------------------------------------------------%
@@ -151,7 +173,7 @@
             \begin{block}{Inference \& Learning in HSMM}
                 \textbf{Inference :}
                 \vskip0.5cm
-                As in HMM, we use a \textbf{Forward-Backward} algorithm to maintain tractability in inference problems.
+                We use a \textbf{Forward-Backward} algorithm to maintain tractability in inference problems.
                 One can then compute various expectations such as $P(o_1, ..., o_T | \lambda)$.\\
                 Interestingly, the joint MAP estimate of the state that ends at time $t$ and the duration of this state,
                 observing a specific sequence $o_1, ..., o_T$ i.e.
@@ -176,19 +198,31 @@
                 \begin{figure}[h]
                     \centering
                     \includegraphics[width=35cm]{hsmm.jpg}
-                    \caption{HSMM. The upper bar charts represent the sojourn time in the states.
-                    The automaton modelize the transition probabilites between states.
-                    The lower bar charts represent the emission distributions for each state.}
+                    \caption{HSMM. top bar charts : sojourn time distributions.
+                    automaton : transition probabilities.
+                    bottom bar charts : emission probabilities.}
                 \end{figure}
                 5 strategies are uncovered by interpreting the states according to reading theory and by
                 analyzing covariates such as fixation duration, saccade amplitude, proximity of the word fixated to the goal :
                 \textit{Normal reading} : merge of states 0/1, \textit{Speed reading} : state 2,
                 \textit{Careful reading} : state 3, \textit{Confirmation} : state 4.
                 \vskip0.5cm
+                \begin{minipage}{0.47\textwidth}
+                    \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=18cm]{scanpath-careful-reader-subj-8-text-14.png}
+                    \end{figure}
+                \end{minipage} \hfill
+                \begin{minipage}{0.47\textwidth}
+                    \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=18cm]{scanpath-trained-reader-subj-13-text-5.png}
+                    \end{figure}
+                \end{minipage}
                 \textbf{Issues adressed :}
                 \begin{itemize}
                     \item[\bullet] Text variability : evolution of text relativeness to the topic
-                    \item[\bullet] Individual variability : fast vs. careful readers.
+                    \item[\bullet] Individual variability : trained vs. careful readers
                 \end{itemize}
             \end{block}
 
