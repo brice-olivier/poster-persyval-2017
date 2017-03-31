@@ -24,8 +24,13 @@
 \graphicspath{{../img/}}
 
 \title{Eye-tracking and electroencephalogram data analysis using hidden semi-Markov models to identify reading strategies}
-\author{Brice Olivier\textsuperscript{1,2}, Jean-Baptiste Durand\textsuperscript{1,2}, Anne Guérin-Dugué\textsuperscript{3}, Marianne Clausel\textsuperscript{2}}
-\institute{\textsuperscript{1}Inria, \textsuperscript{2}Laboratoire Jean Kuntzmann, \textsuperscript{3}Gipsa-lab}
+\author{Brice Olivier\textsuperscript{1,2}, Jean-Baptiste Durand\textsuperscript{1,2,*}, Anne Guérin-Dugué\textsuperscript{3}, Marianne Clausel\textsuperscript{2}}
+\institute{
+\textsuperscript{1}Inria Rhône-Alpes, France,
+\textsuperscript{2}Laboratoire Jean Kuntzmann, Grenoble, France,
+\textsuperscript{3}Gipsa-lab, Grenoble, France,
+\textsuperscript{*}jean-baptiste.durand@imag.fr
+}
 \date[June 13rd-14th, 2017]{June 13rd-14th, 2017}
 
 
@@ -41,7 +46,7 @@
           \begin{column}{.50\paperwidth}
               \begin{itemize}
                   \item[\bullet] Textual information search is an unhomogeneous process in time (Simola, 2008)
-                  \item[\drsh] Reading and decision processes are intertwined
+                  \item[\drsh] Reading strategies and decision processes are intertwined
               \end{itemize}
           \end{column}
           \begin{column}{.50\paperwidth}
@@ -67,7 +72,7 @@
                 \begin{itemize}
                     \item[\bullet] 15 participants, 60 texts per participant
                     \item[\bullet] Presentation of a goal topic, e.g. in french "chasse aux oiseaux" (birds hunting), and a text, extracted from LeMonde, 1999
-                    \item[\bullet] Question : is the text related to the topic ?
+                    \item[\bullet] Question: is the text related to the topic ?
                 \end{itemize}
                 \begin{minipage}{0.47\textwidth}
                     \begin{figure}[h]
@@ -108,7 +113,8 @@
                     \item[\bullet] Semantic proximity of the words in each text to the target topic (Latent Semantic Analysis + Cosine distance)
                 \end{itemize}
                 \vskip0.5cm
-                \textbf{Observed process :} Readmode :  number of words between two fixations \{ $>$ 1, 1, 0, -1 , $<$ -1\}
+                \textbf{Observed process :} Readmode :  number of words between two fixations
+                $\mathcal{V} =\{ v_1:\,> \text{1}, v_2: \text{1}, v_3: \text{0}, v_4: \text{-1}, v_5 :\,< \text{-1}\} $
                 \vskip0.5cm
                 \textbf{Model covariates :} Fixation duration, saccade amplitude, proximity of the fixated word to the topic
 
@@ -117,8 +123,8 @@
             \begin{block}{Problems}
                 \begin{itemize}
                     \item[\bullet] Identify reading strategies, obtain a segmentation of scanpaths with meaningful EEG interpretation
-                    \item[\bullet] Change point detection model to catch changes of phase
-                    \item[\bullet] The sojourn time using reading strategies should have relaxed hypothesis
+                    \item[\bullet] Markov-switching model to catch changes of phase
+                    \item[\bullet] The sojourn time may not have Geometric distributions (Non-Markovian)
                 \end{itemize}
             \end{block}
             \vfill
@@ -137,7 +143,7 @@
                     \item[\bullet] the set of hidden states $\mathcal{S}=\{1,...,M\}$
                     where $S_t \in \mathcal{S}$ is the state at time $t$. $S_{1:T}$ is the hidden state sequence,
                     $s_{1:T}$ a realization
-                    \item[\bullet] the state duration $d \in \mathcal{D}=\{1,...,D\}$
+                    \item[\bullet] the state duration $D \in \mathcal{D}=\{1,...,\infty\}$
                 \end{itemize}
 
                 \vskip0.5cm
@@ -145,14 +151,21 @@
                 \vskip0cm
                 \begin{itemize}
                     \item[\bullet] the initial distribution :
-                    $$\pi_{j,d} \equiv P(S_{1:d} = j, S_{d+1} \neq j)$$
+                    {\small
+                        \begin{align*}
+                            \pi_j p_{\theta_j}(d) & \equiv P(S_1 = j)P(D=d, S_{1:d} = j, S_{d+1} \neq j | S_1 = j)\\
+                            & = P(D=d, S_{1:d} = j, S_{d+1} \neq j)
+                        \end{align*}
+                    }
                     \item[\bullet] the state transition probability from $(i,d')$ to $(j,d)$, $i \neq j$ :
-                    $$a_{(i,d')(j,d)}=a_{ij}p_j(d)$$
-                    $$a_{ij} \equiv P(S_{t+1} = j | S_t = i)$$
-                    $$p_j(d) \equiv P(S_{t+1:t+d} = j, S_{t+d+1} \neq j | S_t \neq j)$$
+                    {\small
+                        $$a_{(i,d')(j,d)}=a_{ij}p_{\theta_j}(d)$$
+                        $$a_{ij} \equiv P(S_{t+1} = j | S_t = i)$$
+                        $$p_{\theta_j}(d) \equiv P(D=d, S_{t+1:t+d} = j, S_{t+d+1} \neq j | S_t \neq j)$$
+                    }
                     \item[\bullet] the emission probability :
-                    $$b_{j,d}(o_{t+1}) \equiv P(o_{t+1:t+d} | S_{t+1:t+d} = j)$$
-                    \item[\bullet] the parameters of the model : $\lambda \equiv \{a_{(i,d')(j,d)},b_{j,d}(v_{k_1:k_d}), \pi_{i,d}\}$
+                    {\small $$b_{j}(v_k) \equiv P(O_t = v_k | S_{t} = j)$$}
+                    \item[\bullet] the parameters of the model : $\lambda \equiv \{a_{(i,d')(j,d)},b_{j}(v_{k}), \pi_{j}, \theta_j\}$
                 \end{itemize}
 
             \end{block}
@@ -173,36 +186,40 @@
             % ---------------------------------------------------------%
             % fill each column with content
             \begin{block}{Inference \& Learning in HSMM}
-                \textbf{Inference :}
+                \textbf{Inference:}
                 %\vskip0.5cm
                 \textbf{Forward-Backward} algorithm to maintain tractability in inference problems.
-                (e.g. expectations such as $P(o_1, ..., o_T | \lambda)$.)\\
-                Interestingly, the joint MAP estimate of the state that ends at time $t$ and the duration of this state,
-                observing a specific sequence $o_1, ..., o_T$ i.e.
-                { $$(\hat s_t, \hat d_t) = \underset{(j,d)}{\mathrm{arg~max}} P(S_{t-d} \neq j, S_{t-d+1:t} = j, S_{t+1} \neq j, o_{1:t} | \lambda)$$}
-                can be estimated via MLE using \textbf{Viterbi} algorithms.
+                (e.g. probabilities such as $P(o_1, ..., o_T | \lambda)$)
 
-                \vskip1cm
-                \textbf{Learning :}
+                \vskip0.5cm
+                \textbf{Learning:}
                 %\vskip0.5cm
-                MLE of $\lambda$ via the iterative \textbf{Expectation-Maximization} algorithm :\\
-                E-step : find the posterior distribution {\small $P(S_1, ..., S_T | O_1, ..., O_T, \lambda^{old})$}\\
-                M-step : maximize le log-likelihood with respect to $\lambda$
+                MLE of $\hat\lambda$ via the iterative \textbf{Expectation-Maximization} algorithm :\\
+                E-step : decomposition of $E[\ln P(S_{1:T}, O_{1:T} | \lambda) | O_{1:T}, \lambda^{old}]$ and simplification\\
+                M-step : maximize with respect to $\lambda$
+
+                \vskip0.5cm
+                \textbf{Restoration:} Estimation of the most likely state sequence, $\hat s_{1:T}$ ,
+                given an observed sequence, $o_1, ..., o_T$, by the MAP principle
+                { $$\hat s_t = \underset{j}{\arg\max}~\underset{d}{\max}~P(S_{t-d} \neq j, S_{t-d+1:t} = j, S_{t+1} \neq j, o_{1:t} | \hat\lambda)$$}
+                using the \textbf{Viterbi} algorithm.
             \end{block}
 
             \vfill
             \begin{block}{Application to eye-movement data}
                 \begin{itemize}
                     \item[\bullet] The time index $t$ corresponds to a fixation.
-                    \item[\bullet] $\mathcal{V} = \{\text{Forward+, Forward, Refixation, Backward, Backward+}\}$
+                    %\item[\bullet] $\mathcal{V} = \{\text{Forward+, Forward, Refixation, Backward, Backward+}\}$
                     \item[\bullet] $M = 5$ reading strategies estimated by maximizing BIC criterion
                 \end{itemize}
                 \begin{figure}[h]
                     \centering
-                    \includegraphics[width=29.75cm]{hsmm.jpg}
+                    \includegraphics[width=31.67cm]{hsmm.jpg}
+                    \setbeamertemplate{caption}{\raggedright\insertcaption\par}
                     \caption{HSMM. top bar charts : sojourn time distributions.
                     automaton : transition probabilities.
                     bottom bar charts : emission probabilities.}
+                    \setbeamertemplate{caption}{}
                 \end{figure}
                 4 interpretable strategies uncovered and validated according to reading theory and by analyzing coviariates
                 (fixation duration, saccade amplitude, proximity of the word fixated to the goal) :
@@ -236,8 +253,7 @@
                 \vskip0.2cm
                 \begin{minipage}{0.67\textwidth}
                     \begin{itemize}
-                        \item[\bullet] Since there is a lot of variability in the text and individuals,
-                        propose a clustering approach to reduce variability of the model (mixtures of HSMM)
+                        \item[\bullet] Variability in the text and individuals $\rightarrow$ propose a clustering approach to reduce variability of the model (mixtures of HSMM)
                         \item[\bullet] Couple eye-movement and EEG data into a single HSMM framework handling signals overlap
                     \end{itemize}
                 \end{minipage}
