@@ -7,5 +7,4 @@
 
 To do list :
 
-- redo Yu's figure of HSMM
-- redo Natarajan's figure of CHSMM
+- redo HSMM figure
