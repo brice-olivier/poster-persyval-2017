@@ -51,7 +51,7 @@
           \end{column}
           \begin{column}{.50\paperwidth}
               \begin{itemize}
-                  \item[\bullet] Proposal : use a data-driven approach in order to separate these processes
+                  \item[\bullet] Proposal: use a data-driven approach in order to separate these processes
                   \item[\bullet] Have the reading strategies contrasted characteristics in terms of EEGs?
               \end{itemize}
           \end{column}
@@ -77,13 +77,13 @@
                 \begin{minipage}{0.47\textwidth}
                     \begin{figure}[h]
                         \centering
-                        \includegraphics[width=18cm]{efrp.jpg}
+                        \includegraphics[width=15cm]{efrp.jpg}
                     \end{figure}
                 \end{minipage} \hfill
                 \begin{minipage}{0.47\textwidth}
                     \begin{figure}[h]
                         \centering
-                        \includegraphics[width=18cm]{experiment_description.jpg}
+                        \includegraphics[width=17cm]{experiment_description.jpg}
                         \caption{Frey, 2013}
                     \end{figure}
                 \end{minipage}
@@ -94,29 +94,30 @@
 
             \vfill
             \begin{block}{Data pre-processing}
-                \textbf{Raw data :} Participants, texts, coordinates X,Y of fixations at each time $t$.
+                \textbf{Raw data:} For each Participant and each text: coordinates X,Y of fixations at each time $t$,
+                fixation duration, saccade amplitude.
                 \vskip0.5cm
-                \textbf{Data augmentation :}
+                \textbf{Data augmentation:}
                 \begin{itemize}
                     \item[\bullet] Fixation duration, saccade amplitude
                     \item[\bullet]
-                    \begin{minipage}{0.45\textwidth}
-                        Word fixated
+                    \begin{minipage}{0.50\textwidth}
+                        Word(s) gazed at each fixation (foveal, and parafoveal regions)
                     \end{minipage}
-                    \begin{minipage}{0.35\textwidth}
+                    \begin{minipage}{0.40\textwidth}
                         \begin{figure}[H]
-                            \includegraphics[width=1\linewidth]{fixation_window.jpg}
-                            %\caption{Scanpath : alternance of fixations (circle, ratio proportional to duration) and saccades (lines).}
+                            \includegraphics[width=0.8\linewidth]{fixation_window.jpg}
+                            %\caption{Scanpath: alternance of fixations (circle, ratio proportional to duration) and saccades (lines).}
                         \end{figure}
                     \end{minipage}
-                    \item[\bullet] Number of words between two fixations
+                    \item[\bullet] Number of skipped words between two fixations
                     \item[\bullet] Semantic proximity of the words in each text to the target topic (Latent Semantic Analysis + Cosine distance)
                 \end{itemize}
                 \vskip0.5cm
-                \textbf{Observed process :} Readmode :  number of words between two fixations
-                $\mathcal{V} =\{ v_1:\,> \text{1}, v_2: \text{1}, v_3: \text{0}, v_4: \text{-1}, v_5 :\,< \text{-1}\} $
+                \textbf{Observed process:} Readmode:  number of words between two fixations and direction of the saccade
+                $\mathcal{V} =\{ v_1:\,> \text{1}, v_2: \text{1}, v_3: \text{0}, v_4: \text{-1}, v_5:\,< \text{-1}\} $
                 \vskip0.5cm
-                \textbf{Model covariates :} Fixation duration, saccade amplitude, proximity of the fixated word to the topic
+                \textbf{Model covariates:} Fixation duration, saccade amplitude, semantic proximity of the fixated word to the topic
 
             \end{block}
             \vfill
@@ -134,7 +135,7 @@
                     \caption{Yu, 2010}
                 \end{figure}
                 \vskip-2cm
-                \textbf{Assume :}
+                \textbf{Assume:}
                 %\vskip0.1cm
                 \begin{itemize}
                     \item[\bullet] the set of observable values $\mathcal{V} = \{ v_1,..., v_K\}$
@@ -147,25 +148,25 @@
                 \end{itemize}
 
                 \vskip0.5cm
-                \textbf{Model :} Explicit-duration HMM, assuming process starts at $t=1$ and ends at $T$
+                \textbf{Model:} Explicit-duration HMM, assuming process starts at $t=1$ and ends at $T$
                 \vskip0cm
                 \begin{itemize}
-                    \item[\bullet] the initial distribution :
+                    \item[\bullet] the initial distribution:
                     {\small
                         \begin{align*}
                             \pi_j p_{\theta_j}(d) & \equiv P(S_1 = j)P(D=d, S_{1:d} = j, S_{d+1} \neq j | S_1 = j)\\
                             & = P(D=d, S_{1:d} = j, S_{d+1} \neq j)
                         \end{align*}
                     }
-                    \item[\bullet] the state transition probability from $(i,d')$ to $(j,d)$, $i \neq j$ :
+                    \item[\bullet] the state transition probability from $(i,d')$ to $(j,d)$, $i \neq j$:
                     {\small
                         $$a_{(i,d')(j,d)}=a_{ij}p_{\theta_j}(d)$$
                         $$a_{ij} \equiv P(S_{t+1} = j | S_t = i)$$
                         $$p_{\theta_j}(d) \equiv P(D=d, S_{t+1:t+d} = j, S_{t+d+1} \neq j | S_t \neq j)$$
                     }
-                    \item[\bullet] the emission probability :
+                    \item[\bullet] the emission probability:
                     {\small $$b_{j}(v_k) \equiv P(O_t = v_k | S_{t} = j)$$}
-                    \item[\bullet] the parameters of the model : $\lambda \equiv \{a_{(i,d')(j,d)},b_{j}(v_{k}), \pi_{j}, \theta_j\}$
+                    \item[\bullet] the parameters of the model: $\lambda \equiv \{a_{(i,d')(j,d)},b_{j}(v_{k}), \pi_{j}, \theta_j\}$
                 \end{itemize}
 
             \end{block}
@@ -194,9 +195,9 @@
                 \vskip0.5cm
                 \textbf{Learning:}
                 %\vskip0.5cm
-                MLE of $\hat\lambda$ via the iterative \textbf{Expectation-Maximization} algorithm :\\
-                E-step : decomposition of $E[\ln P(S_{1:T}, O_{1:T} | \lambda) | O_{1:T}, \lambda^{old}]$ and simplification\\
-                M-step : maximize with respect to $\lambda$
+                MLE of $\hat\lambda$ via the iterative \textbf{Expectation-Maximization} algorithm:\\
+                E-step: decomposition of $E[\ln P(S_{1:T}, O_{1:T} | \lambda) | O_{1:T}, \lambda^{old}]$ and simplification\\
+                M-step: maximize with respect to $\lambda$
 
                 \vskip0.5cm
                 \textbf{Restoration:} Estimation of the most likely state sequence, $\hat s_{1:T}$ ,
@@ -214,16 +215,16 @@
                 \end{itemize}
                 \begin{figure}[h]
                     \centering
-                    \includegraphics[width=31.67cm]{hsmm.jpg}
+                    \includegraphics[width=32.67cm]{hsmm.jpg}
                     \setbeamertemplate{caption}{\raggedright\insertcaption\par}
-                    \caption{HSMM. top bar charts : sojourn time distributions.
-                    automaton : transition probabilities.
-                    bottom bar charts : emission probabilities.}
+                    \caption{HSMM. top bar charts: sojourn time distributions.
+                    automaton: transition probabilities.
+                    bottom bar charts: emission probabilities.}
                     \setbeamertemplate{caption}{}
                 \end{figure}
                 4 interpretable strategies uncovered and validated according to reading theory and by analyzing coviariates
-                (fixation duration, saccade amplitude, proximity of the word fixated to the goal) :
-                {\small$$\mathcal{S}=\{\text{0-1 : Normal reading, 2 : Speed reading, 3 : Careful reading, 4 : Confirmation}\}$$}
+                (fixation duration, saccade amplitude, semantic proximity of the word fixated to the goal):
+                {\small$$\mathcal{S}=\{\text{0-1: Normal reading, 2: Speed reading, 3: Careful reading, 4: Confirmation}\}$$}
                 \begin{minipage}{0.47\textwidth}
                     \begin{figure}[h]
                         \centering
@@ -237,10 +238,10 @@
                     \end{figure}
                 \end{minipage}
                 \vskip 0.5cm
-                \textbf{Issues adressed :}
+                \textbf{Issues adressed:}
                 \begin{itemize}
-                    \item[\bullet] Text variability : evolution of text relativeness to the topic
-                    \item[\bullet] Individual variability : trained vs. careful readers
+                    \item[\bullet] Text variability: evolution of text relativeness to the topic
+                    \item[\bullet] Individual variability: trained vs. careful readers
                 \end{itemize}
             \end{block}
 
