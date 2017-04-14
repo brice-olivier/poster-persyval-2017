@@ -41,7 +41,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{frame}
-    \begin{block}{Study purpose}
+    \begin{block}{Study proposal}
         \begin{columns}[T]
           \begin{column}{.50\paperwidth}
               \begin{itemize}
@@ -52,7 +52,7 @@
           \begin{column}{.50\paperwidth}
               \begin{itemize}
                   \item[\bullet] Proposal: use a data-driven approach in order to separate these processes
-                  \item[\bullet] Have the reading strategies contrasted characteristics in terms of EEGs?
+                  \item[\bullet] Have the reading strategy contrasted characteristics in terms of EEGs?
               \end{itemize}
           \end{column}
         \end{columns}
@@ -71,19 +71,19 @@
             \begin{block}{Experiment description}
                 \begin{itemize}
                     \item[\bullet] 15 participants, 60 texts per participant
-                    \item[\bullet] Presentation of a goal topic, e.g. in french "chasse aux oiseaux" (birds hunting), and a text, extracted from LeMonde, 1999
+                    \item[\bullet] Presentation of a goal topic, e.g. in French "chasse aux oiseaux" (bird hunting), and a text, extracted from LeMonde, 1999
                     \item[\bullet] Question: is the text related to the topic ?
                 \end{itemize}
-                \begin{minipage}{0.47\textwidth}
+                \begin{minipage}{0.32\textwidth}
                     \begin{figure}[h]
                         \centering
                         \includegraphics[width=15cm]{efrp.jpg}
                     \end{figure}
                 \end{minipage} \hfill
-                \begin{minipage}{0.47\textwidth}
+                \begin{minipage}{0.65\textwidth}
                     \begin{figure}[h]
                         \centering
-                        \includegraphics[width=17cm]{experiment_description.jpg}
+                        \includegraphics[width=20.25cm]{experiment_description.jpg}
                         \caption{Frey, 2013}
                     \end{figure}
                 \end{minipage}
@@ -99,7 +99,6 @@
                 \vskip0.5cm
                 \textbf{Data augmentation:}
                 \begin{itemize}
-                    \item[\bullet] Fixation duration, saccade amplitude
                     \item[\bullet]
                     \begin{minipage}{0.50\textwidth}
                         Word(s) gazed at each fixation (foveal, and parafoveal regions)
@@ -124,7 +123,7 @@
             \begin{block}{Problems}
                 \begin{itemize}
                     \item[\bullet] Identify reading strategies, obtain a segmentation of scanpaths with meaningful EEG interpretation
-                    \item[\bullet] Markov-switching model to catch changes of phase
+                    \item[\bullet] Markov-switching model to catch phase changes
                     \item[\bullet] The sojourn time may not have Geometric distributions (Non-Markovian)
                 \end{itemize}
             \end{block}
@@ -135,38 +134,38 @@
                     \caption{Yu, 2010}
                 \end{figure}
                 \vskip-2cm
-                \textbf{Assume:}
+                \textbf{Notations:}
                 %\vskip0.1cm
                 \begin{itemize}
-                    \item[\bullet] the set of observable values $\mathcal{V} = \{ v_1,..., v_K\}$
+                    \item[\bullet] The set of observable values $\mathcal{V} = \{ v_1,..., v_K\}$
                     where $O_t \in \mathcal{V}$ is the state at time $t$. $O_{1:T}$ is the observed state sequence,
                     $o_{1:T}$ a realization
-                    \item[\bullet] the set of hidden states $\mathcal{S}=\{1,...,M\}$
+                    \item[\bullet] The set of hidden states $\mathcal{S}=\{1,...,M\}$
                     where $S_t \in \mathcal{S}$ is the state at time $t$. $S_{1:T}$ is the hidden state sequence,
                     $s_{1:T}$ a realization
-                    \item[\bullet] the state duration $D \in \mathcal{D}=\{1,...,\infty\}$
+                    \item[\bullet] The state duration $D \in \mathcal{D}=\{1,...,\infty\}$
                 \end{itemize}
 
                 \vskip0.5cm
                 \textbf{Model:} Explicit-duration HMM, assuming process starts at $t=1$ and ends at $T$
                 \vskip0cm
                 \begin{itemize}
-                    \item[\bullet] the initial distribution:
+                    \item[\bullet] Initial distribution:
                     {\small
                         \begin{align*}
                             \pi_j p_{\theta_j}(d) & \equiv P(S_1 = j)P(D=d, S_{1:d} = j, S_{d+1} \neq j | S_1 = j)\\
                             & = P(D=d, S_{1:d} = j, S_{d+1} \neq j)
                         \end{align*}
                     }
-                    \item[\bullet] the state transition probability from $(i,d')$ to $(j,d)$, $i \neq j$:
+                    \item[\bullet] State transition probability from $(i,d')$ to $(j,d)$, $i \neq j$:
                     {\small
                         $$a_{(i,d')(j,d)}=a_{ij}p_{\theta_j}(d)$$
                         $$a_{ij} \equiv P(S_{t+1} = j | S_t = i)$$
                         $$p_{\theta_j}(d) \equiv P(D=d, S_{t+1:t+d} = j, S_{t+d+1} \neq j | S_t \neq j)$$
                     }
-                    \item[\bullet] the emission probability:
+                    \item[\bullet] Emission probability:
                     {\small $$b_{j}(v_k) \equiv P(O_t = v_k | S_{t} = j)$$}
-                    \item[\bullet] the parameters of the model: $\lambda \equiv \{a_{(i,d')(j,d)},b_{j}(v_{k}), \pi_{j}, \theta_j\}$
+                    \item[\bullet] Parameters of the model: $\lambda \equiv \{a_{(i,d')(j,d)},b_{j}(v_{k}), \pi_{j}, \theta_j\}$
                 \end{itemize}
 
             \end{block}
@@ -222,7 +221,7 @@
                     bottom bar charts: emission probabilities.}
                     \setbeamertemplate{caption}{}
                 \end{figure}
-                4 interpretable strategies uncovered and validated according to reading theory and by analyzing coviariates
+                4 interpretable strategies uncovered and validated according to reading theory and by analyzing covariates
                 (fixation duration, saccade amplitude, semantic proximity of the word fixated to the goal):
                 {\small$$\mathcal{S}=\{\text{0-1: Normal reading, 2: Speed reading, 3: Careful reading, 4: Confirmation}\}$$}
                 \begin{minipage}{0.47\textwidth}
@@ -255,7 +254,7 @@
                 \begin{minipage}{0.67\textwidth}
                     \begin{itemize}
                         \item[\bullet] Variability in the text and individuals $\rightarrow$ propose a clustering approach to reduce variability of the model (mixtures of HSMM)
-                        \item[\bullet] Couple eye-movement and EEG data into a single HSMM framework handling signals overlap
+                        \item[\bullet] Couple eye-movement and EEG data into a single HSMM framework handling signal overlap
                     \end{itemize}
                 \end{minipage}
                 \begin{minipage}{0.30\textwidth}
